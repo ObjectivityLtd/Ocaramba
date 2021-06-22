@@ -31,12 +31,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class BasicAuthPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
 
         /// <summary>
         /// Locators for elements
@@ -47,7 +41,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public BasicAuthPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for page to open");
+            this.DriverContext.LogTest.Info("Waiting for page to open");
             this.Driver.IsElementPresent(this.pageHeader, BaseConfiguration.ShortTimeout);
         }
 
@@ -56,7 +50,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
             get
             {
                 var text = this.Driver.GetElement(this.congratulationsInfo, "Trying to get congratulations Info").Text;
-                Logger.Info(CultureInfo.CurrentCulture, "Text from page '{0}'", text);
+                this.DriverContext.LogTest.Info($"Text from page '{text}'");
                 return text;
             }
         }

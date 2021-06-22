@@ -31,13 +31,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class InternetPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         /// <summary>
         /// Locators for elements
         /// </summary>
@@ -62,7 +55,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         {
             var url = BaseConfiguration.GetUrlValue;
             this.Driver.NavigateTo(new Uri(url));
-            Logger.Info(CultureInfo.CurrentCulture, "Opening page {0}", url);
+            this.DriverContext.LogTest.Info($"Opening page {url}");
             return this;
         }
 
@@ -70,7 +63,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         {
             var url = BaseConfiguration.GetUrlValueWithUserCredentials;
             this.Driver.NavigateTo(new Uri(url));
-            Logger.Info(CultureInfo.CurrentCulture, "Opening page {0}", url);
+            this.DriverContext.LogTest.Info($"Opening page {url}");
             return this;
         }
 

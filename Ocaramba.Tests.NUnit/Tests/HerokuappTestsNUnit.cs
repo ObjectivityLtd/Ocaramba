@@ -121,22 +121,22 @@ namespace Ocaramba.Tests.NUnit.Tests
                 .GoToHoversPage();
 
             var text1Before = homePage.GetHoverText(1);
-            this.LogTest.Info("Text before: '{0}'", text1Before);
+            this.LogTest.Info($"Text before: '{text1Before}'");
             homePage.MouseHoverAt(1);
             var text1After = homePage.GetHoverText(1);
-            this.LogTest.Info("Text after: '{0}'", text1After);
+            this.LogTest.Info($"Text after: '{text1After}'");
 
             var text2Before = homePage.GetHoverText(2);
-            this.LogTest.Info("Text before: '{0}'", text2Before);
+            this.LogTest.Info($"Text before: '{text2Before}'");
             homePage.MouseHoverAt(2);
             var text2After = homePage.GetHoverText(2);
-            this.LogTest.Info("Text after: '{0}'", text2After);
+            this.LogTest.Info($"Text after: '{text2After}'");
 
             var text3Before = homePage.GetHoverText(3);
-            this.LogTest.Info("Text before: '{0}'", text3Before);
+            this.LogTest.Info($"Text before: '{text3Before}'");
             homePage.MouseHoverAt(3);
             var text3After = homePage.GetHoverText(3);
-            this.LogTest.Info("Text after: '{0}'", text3After);
+            this.LogTest.Info($"Text after: '{text3After}'");
 
             Assert.AreEqual(string.Empty, text1Before);
             Assert.AreEqual(string.Empty, text2Before);

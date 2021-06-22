@@ -24,6 +24,10 @@ using System.IO;
 
 namespace Ocaramba.Tests.NUnit
 {
+#if netcoreapp3_1 || net47
+    using AventStack.ExtentReports;
+    using AventStack.ExtentReports.Reporter;
+#endif
     using global::NUnit.Framework;
     using global::NUnit.Framework.Interfaces;
     using Ocaramba;
@@ -36,7 +40,9 @@ namespace Ocaramba.Tests.NUnit
     public class ProjectTestBase : TestBase
     {
         private readonly DriverContext driverContext = new DriverContext();
-
+#if netcoreapp3_1 || net47
+        public static ExtentReports extent;
+#endif
         /// <summary>
         /// Gets or sets logger instance for driver
         /// </summary>
@@ -71,9 +77,14 @@ namespace Ocaramba.Tests.NUnit
         public void BeforeClass()
         {
 #if netcoreapp3_1
-        this.DriverContext.CurrentDirectory = Directory.GetCurrentDirectory();
+            this.DriverContext.CurrentDirectory = Directory.GetCurrentDirectory();
 #endif
+#if netcoreapp3_1 || net47
+            extent = new ExtentReports();
 
+            var reporter = new ExtentHtmlReporter(this.DriverContext.CurrentDirectory+ "\\"+TestContext.CurrentContext.Test.ClassName.ToString() + "\\"+ "extent.html");
+            extent.AttachReporter(reporter);
+#endif
 #if net47 || net45
             this.DriverContext.CurrentDirectory = TestContext.CurrentContext.TestDirectory;
 #endif
@@ -91,6 +102,9 @@ namespace Ocaramba.Tests.NUnit
             PrintPerformanceResultsHelper.PrintAverageDurationMillisecondsInTeamcity(this.DriverContext.PerformanceMeasures);
             PrintPerformanceResultsHelper.PrintPercentiles90DurationMillisecondsinTeamcity(this.DriverContext.PerformanceMeasures);
             this.DriverContext.Stop();
+#if netcoreapp3_1
+            extent.Flush();
+#endif
         }
 
         /// <summary>
@@ -99,6 +113,9 @@ namespace Ocaramba.Tests.NUnit
         [SetUp]
         public void BeforeTest()
         {
+#if netcoreapp3_1
+            LogTest.Test = extent.CreateTest(TestContext.CurrentContext.Test.FullName);
+#endif
             this.DriverContext.TestTitle = TestContext.CurrentContext.Test.Name;
             this.LogTest.LogTestStarting(this.driverContext);
         }
@@ -109,6 +126,8 @@ namespace Ocaramba.Tests.NUnit
         [TearDown]
         public void AfterTest()
         {
+            var status = TestContext.CurrentContext.Result.Outcome.Status;
+            var errorMessage = TestContext.CurrentContext.Result.Message;
             this.DriverContext.IsTestFailed = TestContext.CurrentContext.Result.Outcome.Status == TestStatus.Failed || !this.driverContext.VerifyMessages.Count.Equals(0);
             var filePaths = this.SaveTestDetailsIfTestFailed(this.driverContext);
             this.SaveAttachmentsToTestContext(filePaths);
@@ -123,6 +142,20 @@ namespace Ocaramba.Tests.NUnit
             {
                 Assert.Fail("JavaScript errors found. See the logs for details");
             }
+
+            if (status == TestStatus.Failed)
+
+            {
+#if netcoreapp3_1
+                LogTest.Test.Log(Status.Fail, status + errorMessage);
+#endif
+            }
+            else
+            {
+#if netcoreapp3_1
+                LogTest.Test.Log(Status.Pass);
+#endif
+            }
         }
 
         private void SaveAttachmentsToTestContext(string[] filePaths)
@@ -131,10 +164,12 @@ namespace Ocaramba.Tests.NUnit
             {
                 foreach (var filePath in filePaths)
                 {
-                    this.LogTest.Info("Uploading file [{0}] to test context", filePath);
+                    this.LogTest.Info($"Uploading file [{filePath}] to test context");
                     TestContext.AddTestAttachment(filePath);
                 }
             }
         }
     }
 }
+
+

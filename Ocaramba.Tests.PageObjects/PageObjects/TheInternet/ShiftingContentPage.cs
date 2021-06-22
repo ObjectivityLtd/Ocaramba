@@ -30,13 +30,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class ShiftingContentPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         /// <summary>
         /// Locators for elements
         /// </summary>
@@ -46,21 +39,21 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public ShiftingContentPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for page to open");
+            this.DriverContext.LogTest.Info("Waiting for page to open");
             this.Driver.IsElementPresent(this.pageHeader, BaseConfiguration.ShortTimeout);
         }
 
         public string CountLinks()
         {
             var count = this.Driver.GetElements(this.links, BaseConfiguration.ShortTimeout, e => e.Displayed && e.Enabled, 1).Count;
-            Logger.Info(CultureInfo.CurrentCulture, "Number of links on page '{0}'", count);
+            this.DriverContext.LogTest.Info($"Number of links on page '{count}'");
             return count.ToString(CultureInfo.CurrentCulture);
         }
 
         public string CountLinksGetElementsBasic()
         {
             var count = this.Driver.GetElements(this.links, 3).Count;
-            Logger.Info(CultureInfo.CurrentCulture, "Number of links on page '{0}'", count);
+            this.DriverContext.LogTest.Info($"Number of links on page '{count}'");
             return count.ToString(CultureInfo.CurrentCulture);
         }
     }

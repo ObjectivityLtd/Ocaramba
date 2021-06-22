@@ -31,13 +31,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class FormAuthenticationPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         /// <summary>
         /// Locators for elements
         /// </summary>
@@ -51,7 +44,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public FormAuthenticationPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for page to open");
+            this.DriverContext.LogTest.Info("Waiting for page to open");
             this.Driver.IsElementPresent(this.pageHeader, BaseConfiguration.ShortTimeout);
         }
 
@@ -59,11 +52,11 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         {
             get
             {
-                Logger.Info("Try to get message");
+                this.DriverContext.LogTest.Info("Try to get message");
                 var text = this.Driver.GetElement(this.message, BaseConfiguration.MediumTimeout, 0.1, e => e.Displayed && e.Enabled, "Tying to get welcome message every 0.1 s").Text;
                 var index = text.IndexOf("!", StringComparison.Ordinal);
                 text = text.Remove(index + 1);
-                Logger.Info(CultureInfo.CurrentCulture, "Message '{0}'", text);
+                this.DriverContext.LogTest.Info($"Message '{0}'", text);
                 return text;
             }
         }
@@ -72,20 +65,20 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
         public void EnterPassword(string password)
         {
-            Logger.Info(CultureInfo.CurrentCulture, "Password '{0}'", password);
+            this.DriverContext.LogTest.Info($"Password '{password}'");
             this.Driver.GetElement(this.passwordForm).SendKeys(password);
             this.Driver.WaitForAjax();
         }
 
         public void EnterUserName(string userName)
         {
-            Logger.Info(CultureInfo.CurrentCulture, "User name '{0}'", userName);
+            this.DriverContext.LogTest.Info($"User name '{userName}'");
             this.Driver.GetElement(this.userNameForm).SendKeys(userName);
         }
 
         public void LogOn()
         {
-            Logger.Info(CultureInfo.CurrentCulture, "Click on Login Button");
+            this.DriverContext.LogTest.Info($"Click on Login Button");
 
             this.Driver.GetElement(this.loginButton).JavaScriptClick();
         }

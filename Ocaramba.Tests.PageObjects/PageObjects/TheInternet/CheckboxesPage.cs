@@ -33,15 +33,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
     /// </summary>
     public class CheckboxesPage : ProjectPageBase
     {
-        /// <summary>
-        /// The logger.
-        /// </summary>
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
 
         /// <summary>
         /// Locators for elements
@@ -60,8 +51,8 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public CheckboxesPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Create checkboxes page.");
-            Logger.Info("Check if checkboxes page is displayed.");
+            this.DriverContext.LogTest.Info("Create checkboxes page.");
+            this.DriverContext.LogTest.Info("Check if checkboxes page is displayed.");
             this.Driver.IsElementPresent(this.checkboxesPageHeader, BaseConfiguration.MediumTimeout);
         }
 
@@ -69,7 +60,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         {
             get
             {
-                Logger.Info("Check if checkbox1 is ticked.");
+                this.DriverContext.LogTest.Info("Check if checkbox1 is ticked.");
                 return this.Driver.IsElementPresent(this.checkbox1Checked, BaseConfiguration.ShortTimeout);
             }
         }
@@ -81,7 +72,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         {
             get
             {
-                Logger.Info("Check if checkbox2 is ticked.");
+                this.DriverContext.LogTest.Info("Check if checkbox2 is ticked.");
                 return this.Driver.IsElementPresent(this.checkbox2Checked, BaseConfiguration.ShortTimeout);
             }
         }
@@ -92,7 +83,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         /// <returns><see cref="CheckboxesPage"/></returns>
         public CheckboxesPage TickCheckboxOne()
         {
-            Logger.Info("Tick checkmark1.");
+            this.DriverContext.LogTest.Info("Tick checkmark1.");
             this.Driver.GetElement<Checkbox>(this.checkbox1).TickCheckbox();
             return this;
         }
@@ -103,7 +94,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         /// <returns>Checkboxes Page</returns>
         public CheckboxesPage UnTickCheckboxOne()
         {
-            Logger.Info("Untick checkmark1.");
+            this.DriverContext.LogTest.Info("Untick checkmark1.");
             this.Driver.GetElement<Checkbox>(this.checkbox1).UntickCheckbox();
             return this;
         }
@@ -114,14 +105,14 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         /// <returns>Checkboxes Page</returns>
         public CheckboxesPage TickCheckboxTwo()
         {
-            Logger.Info("Tick checkmark2.");
+            this.DriverContext.LogTest.Info("Tick checkmark2.");
             this.Driver.GetElement<Checkbox>(this.checkbox2).TickCheckbox();
             return this;
         }
 
         public CheckboxesPage UnTickCheckboxTwo()
         {
-            Logger.Info("Untick checkmark2.");
+            this.DriverContext.LogTest.Info("Untick checkmark2.");
             this.Driver.GetElement<Checkbox>(this.checkbox2).UntickCheckbox();
             return this;
         }

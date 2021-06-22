@@ -26,20 +26,35 @@ namespace Ocaramba.Logger
     using System.Globalization;
 
     using NLog;
+#if netcoreapp3_1 || net47
+    using AventStack.ExtentReports;
+#endif
 
     /// <summary>
     /// Class for test logger.
     /// </summary>
     public class TestLogger
     {
+#if netcoreapp3_1
         /// <summary>
         /// The logger.
         /// </summary>
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+        public static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
 #endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
+#if net47 || net45
+        /// <summary>
+        /// The logger.
+        /// </summary>
+        public static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
+#endif
+
+#if netcoreapp3_1 || net47
+        /// <summary>
+        /// The ExtentTest logger.
+        /// </summary>
+#pragma warning disable SA1401 // Fields should be private
+        public ExtentTest Test;
+#pragma warning restore SA1401 // Fields should be private
 #endif
 
         /// <summary>
@@ -55,7 +70,7 @@ namespace Ocaramba.Logger
         {
             this.startTestTime = DateTime.Now;
             this.Info("*************************************************************************************");
-            this.Info("START: {0} starts at {1}.", driverContext.TestTitle, this.startTestTime);
+            this.Info($"START: {driverContext.TestTitle} starts at {this.startTestTime}.");
         }
 
         /// <summary>
@@ -66,7 +81,7 @@ namespace Ocaramba.Logger
         {
             var endTestTime = DateTime.Now;
             var timeInSec = (endTestTime - this.startTestTime).TotalMilliseconds / 1000d;
-            this.Info("END: {0} ends at {1} after {2} sec.", driverContext.TestTitle, endTestTime, timeInSec.ToString("##,###", CultureInfo.CurrentCulture));
+            this.Info($"END: {driverContext.TestTitle} ends at {endTestTime} after {timeInSec.ToString("##,###", CultureInfo.CurrentCulture)} sec..");
             this.Info("*************************************************************************************");
         }
 
@@ -78,6 +93,35 @@ namespace Ocaramba.Logger
         public void Info(string message, params object[] args)
         {
             Logger.Info(CultureInfo.CurrentCulture, message, args);
+#if netcoreapp3_1 || net47
+            this.Test.Log(Status.Pass, message);
+#endif
+        }
+
+        /// <summary>
+        /// Information the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The arguments.</param>
+        public void Trace(string message, params object[] args)
+        {
+            Logger.Trace(CultureInfo.CurrentCulture, message, args);
+#if netcoreapp3_1 || net47
+            this.Test.Log(Status.Pass, message);
+#endif
+        }
+
+        /// <summary>
+        /// Information the specified message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="args">The arguments.</param>
+        public void Debug(string message, params object[] args)
+        {
+            Logger.Debug(CultureInfo.CurrentCulture, message, args);
+#if netcoreapp3_1 || net47
+            this.Test.Log(Status.Pass, message);
+#endif
         }
 
         /// <summary>
@@ -98,6 +142,9 @@ namespace Ocaramba.Logger
         public void Error(string message, params object[] args)
         {
             Logger.Error(CultureInfo.CurrentCulture, message, args);
+#if netcoreapp3_1 || net47
+            this.Test.Log(Status.Pass, message);
+#endif
         }
 
         /// <summary>

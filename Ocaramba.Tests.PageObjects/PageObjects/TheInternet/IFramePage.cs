@@ -31,13 +31,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class IFramePage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         private readonly ElementLocator
             menu = new ElementLocator(Locator.CssSelector, "div[role=menubar]"),
             iframe = new ElementLocator(Locator.Id, "mce_0_ifr"),
@@ -50,7 +43,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
         public string TakeScreenShotsOfTextInIFrame(string folder, string name)
         {
-            Logger.Info(CultureInfo.CurrentCulture, "Take Screen Shots");
+            this.DriverContext.LogTest.Info("Take Screen Shots");
             var iFrame = this.Driver.GetElement(this.iframe);
             int x = iFrame.Location.X;
             int y = iFrame.Location.Y;
@@ -61,7 +54,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
         public string TakeScreenShotsOfMenu(string folder, string name)
         {
-            Logger.Info(CultureInfo.CurrentCulture, "Take Screen Shots");
+            this.DriverContext.LogTest.Info("Take Screen Shots");
             var el = this.Driver.GetElement(this.menu);
             return TakeScreenShot.TakeScreenShotOfElement(el, folder, name);
         }

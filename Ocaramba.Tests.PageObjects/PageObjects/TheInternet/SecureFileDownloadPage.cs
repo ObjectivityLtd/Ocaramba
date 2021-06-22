@@ -32,13 +32,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class SecureFileDownloadPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         /// <summary>
         /// Locators for elements
         /// </summary>
@@ -48,7 +41,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public SecureFileDownloadPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for File Download page to open");
+            this.DriverContext.LogTest.Info("Waiting for File Download page to open");
             this.Driver.IsElementPresent(this.downloadPageHeader, BaseConfiguration.ShortTimeout);
         }
 
@@ -64,7 +57,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
             }
             else
             {
-                Logger.Info(CultureInfo.CurrentCulture, "Downloading files in browser {0} is not supported", BaseConfiguration.TestBrowser);
+                this.DriverContext.LogTest.Info($"Downloading files in browser {BaseConfiguration.TestBrowser} is not supported");
             }
 
             return this;

@@ -29,13 +29,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class DynamicLoadingPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         private readonly ElementLocator exampleLink1 = new ElementLocator(Locator.CssSelector, "a[href='/dynamic_loading/2'"),
         startButton = new ElementLocator(Locator.XPath, "//button[.='Start']"),
         text = new ElementLocator(Locator.XPath, "//div[@id='finish']/h4");
@@ -50,15 +43,15 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
             get
             {
                 var returnText = this.Driver.GetElement(this.text).Text;
-                Logger.Debug(returnText);
+                this.DriverContext.LogTest.Debug(returnText);
                 return returnText;
             }
         }
 
         public void ShortTimeoutText()
         {
-          var returnText = this.Driver.GetElement(this.text, BaseConfiguration.ShortTimeout).Text;
-          Logger.Debug(returnText);
+            var returnText = this.Driver.GetElement(this.text, BaseConfiguration.ShortTimeout).Text;
+            this.DriverContext.LogTest.Debug(returnText);
         }
 
         public DynamicLoadingPage ClickOnExample2()

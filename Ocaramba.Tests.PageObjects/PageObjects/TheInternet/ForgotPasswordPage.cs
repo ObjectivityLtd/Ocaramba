@@ -31,13 +31,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class ForgotPasswordPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         /// <summary>
         /// Locators for elements
         /// </summary>
@@ -50,7 +43,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public ForgotPasswordPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for page to open");
+            this.DriverContext.LogTest.Info("Waiting for page to open");
             this.Driver.IsElementPresent(this.pageHeader, BaseConfiguration.ShortTimeout);
         }
 
@@ -59,7 +52,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
             get
             {
                 var text = this.Driver.GetElement(this.emailLabel).Text;
-                Logger.Info(CultureInfo.CurrentCulture, "Email label '{0}'", text);
+                this.DriverContext.LogTest.Info($"Email label '{text}'");
                 return text;
             }
         }
@@ -70,7 +63,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
             {
                 this.Driver.GetElement(this.retrievePassword).Click();
                 var text = this.Driver.GetElement(this.message).Text.Trim();
-                Logger.Info(CultureInfo.CurrentCulture, "Message '{0}'", text);
+                this.DriverContext.LogTest.Info($"Message '{0}'");
                 return text;
             }
         }
@@ -78,7 +71,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public int EnterEmail(int name, int server, int country)
         {
             var email = string.Format(CultureInfo.CurrentCulture, "{0}{1}{2}{3}{4}", NameHelper.RandomName(name), "@", NameHelper.RandomName(server), ".", NameHelper.RandomName(country));
-            Logger.Info(CultureInfo.CurrentCulture, "Random generated Email'{0}'", email);
+            this.DriverContext.LogTest.Info($"Random generated Email'{email}'");
             this.Driver.GetElement(this.emailTextBox).SendKeys(email);
             return email.Length - 2;
         }

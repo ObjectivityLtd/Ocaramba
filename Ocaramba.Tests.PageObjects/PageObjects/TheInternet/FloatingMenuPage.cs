@@ -30,13 +30,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class FloatingMenuPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         private readonly ElementLocator floatingMenuPageText = new ElementLocator(
             Locator.CssSelector,
             "div.scroll");
@@ -48,7 +41,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public FloatingMenuPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for File Download page to open");
+            this.DriverContext.LogTest.Info("Waiting for File Download page to open");
             //// this.Driver.IsElementPresent(this.floatingMenuPageText, BaseConfiguration.ShortTimeout);
         }
 

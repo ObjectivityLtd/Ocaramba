@@ -33,13 +33,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
     public class KeyPressesPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         private readonly ElementLocator keyPressesPageHeader = new ElementLocator(Locator.XPath, "//h3[.='Key Presses']");
 
         private readonly ElementLocator resultTextLocator = new ElementLocator(Locator.Id, "result");
@@ -47,7 +40,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
         public KeyPressesPage(DriverContext driverContext)
             : base(driverContext)
         {
-            Logger.Info("Waiting for Key Process page to open");
+            this.DriverContext.LogTest.Info("Waiting for Key Process page to open");
             this.Driver.IsElementPresent(this.keyPressesPageHeader, BaseConfiguration.ShortTimeout);
         }
 

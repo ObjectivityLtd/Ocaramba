@@ -32,13 +32,6 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
     /// </summary>
     public class StatusCodesPage : ProjectPageBase
     {
-#if net47 || net45
-        private static readonly NLog.Logger Logger = LogManager.GetCurrentClassLogger();
-#endif
-#if netcoreapp3_1
-        private static readonly NLog.Logger Logger = NLog.Web.NLogBuilder.ConfigureNLog("nlog.config").GetCurrentClassLogger();
-#endif
-
         private readonly ElementLocator
             statusCodeHeader = new ElementLocator(Locator.XPath, "//h3[text()='Status Codes']"),
             code200 = new ElementLocator(Locator.CssSelector, "a[href='status_codes/200']");
@@ -50,7 +43,7 @@ namespace Ocaramba.Tests.PageObjects.PageObjects.TheInternet
 
         public bool IsStatusCodesPageDisplayed()
         {
-            Logger.Info("Check if Status Codes page is displayed.");
+            this.DriverContext.LogTest.Info("Check if Status Codes page is displayed.");
             return this.Driver.IsElementPresent(this.statusCodeHeader, BaseConfiguration.MediumTimeout);
         }
 
