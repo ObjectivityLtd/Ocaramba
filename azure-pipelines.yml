@@ -196,11 +196,15 @@ stages:
               !**\*TestAdapter.dll
               !**\obj\**
             searchFolder: '$(System.DefaultWorkingDirectory)'
-            testFiltercriteria: '(TestCategory!=TakingScreehShots)'
             runInParallel: true
             codeCoverageEnabled: true
             publishRunAttachments: true
-    
+        - task: PublishCodeCoverageResults@1
+          inputs:
+            codeCoverageTool: 'Cobertura'
+            summaryFileLocation: '**/coverage.xml'
+            reportDirectory: '**/coveragereport'
+
     - job: RunTestsOnWindowsCore2
       pool:
         vmImage: 'windows-latest'
