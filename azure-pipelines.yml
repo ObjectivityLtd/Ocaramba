@@ -184,15 +184,23 @@ stages:
             targetType: 'inline'
             script: |
               Get-ChildItem .\  -Recurse
-        - task: PowerShell@2
+
+        - task: VSTest@2
           inputs:
-            filePath: './ExecutingTestsOnWindowsAzure1.ps1'
-            
-        - task: PublishTestResults@2
-          inputs:
-            testResultsFormat: 'VSTest'
-            testResultsFiles: '**/Ocaramba.Tests.*.xml'
-            
+            testSelector: 'testAssemblies'
+            testAssemblyVer2: |
+              **\netcoreapp3.1\Ocaramba.Tests.Angular.dll
+              **\netcoreapp3.1\Ocaramba.Tests.NUnit.dll
+              **\net472\Ocaramba.Tests.Features.dll
+              **\net45\Ocaramba.Tests.NUnit.dll
+              !**\*TestAdapter.dll
+              !**\obj\**
+            searchFolder: '$(System.DefaultWorkingDirectory)'
+            testFiltercriteria: '(TestCategory!=TakingScreehShots)'
+            runInParallel: true
+            codeCoverageEnabled: true
+            publishRunAttachments: true
+    
     - job: RunTestsOnWindowsCore2
       pool:
         vmImage: 'windows-latest'
